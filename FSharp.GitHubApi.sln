@@ -3,6 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.GitHubApi", "src\FSharp.GitHubApi\FSharp.GitHubApi.fsproj", "{4436B85D-E89B-42D5-980B-C8203981482D}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp.GitHubApi.Tests", "src\FSharp.GitHubApi.Tests\FSharp.GitHubApi.Tests.fsproj", "{C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9968A94-4940-4D00-A23D-FC7C4B14ED97}"
+	ProjectSection(SolutionItems) = preProject
+		Build.bat = Build.bat
+		Build.fsx = Build.fsx
+		readme.md = readme.md
+		ResolveDependencies.bat = ResolveDependencies.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +23,10 @@ Global
 		{4436B85D-E89B-42D5-980B-C8203981482D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4436B85D-E89B-42D5-980B-C8203981482D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4436B85D-E89B-42D5-980B-C8203981482D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

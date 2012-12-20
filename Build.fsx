@@ -21,12 +21,12 @@ Target "Clean" (fun _ ->
 )
 
 Target "Build Api" (fun _ ->
-    let projects = !! @"src\GitHubApi\GitHubApi.fsproj"
+    let projects = !! @"src\FSharp.GitHubApi\FSharp.GitHubApi.fsproj"
     MSBuild api "Build" buildArgs projects |> Log "Build Api Log: "
 )
 
 Target "Build Api Tests" (fun _ ->
-    let projects = !! @"src\GitHubApi.Tests\GitHubApi.Tests.fsproj"
+    let projects = !! @"src\FSharp.GitHubApi.Tests\FSharp.GitHubApi.Tests.fsproj"
     MSBuild apitests "Build" buildArgs projects |> Log "Build Api Tests Log: "
 )
 
@@ -40,7 +40,7 @@ Target "Run FirstPass Tests" (fun _ ->
                 WorkingDir = apitests
                 DisableShadowCopy = true
                 OutputFile = "FirstPass.Results.xml"
-                TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "GitHubApi.Tests.dll"))
+                TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "FSharp.GitHubApi.Tests.dll"))
 )
 
 Description "Runs the second-pass on the unit test suite."
@@ -53,7 +53,7 @@ Target "Run SecondPass Tests" (fun _ ->
                 WorkingDir = apitests
                 DisableShadowCopy = true
                 OutputFile = "SecondPass.Results.xml"
-                TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "GitHubApi.Tests.dll"))
+                TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "FSharp.GitHubApi.Tests.dll"))
 )
 
 Target "Developer" (fun _ ->
