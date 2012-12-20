@@ -1,0 +1,16 @@
+# Folders to ignore
+bin/
+obj/
+_ReSharper.*/
+TestResults/
+*.Setup/Debug/
+*.Setup/Release/
+packages/
+~unittest/
+build-output/
+
+# Files to ignore
+*.suo
+*.DotSettings.user
+*.*proj.user
+build.log.xml
