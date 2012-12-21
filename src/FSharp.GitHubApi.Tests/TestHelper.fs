@@ -1,6 +1,10 @@
 ﻿module TestHelper
 
     open GitHub
+    open FSharpx
+    open FSharpx.TypeProviders.AppSettings
+
+    type Settings = AppSettings<"app.config">
 
     type User = {
         Username: string option
@@ -25,6 +29,11 @@
     let AnonymousUser = {
         Username = None
         Password = None
+    }
+
+    let AuthenticatedUser = {
+        Username = Some(Settings.GitHubUsername.ToString())
+        Password = Some(Settings.GitHubPassword.ToString())
     }
 
     let DefaultState user =
