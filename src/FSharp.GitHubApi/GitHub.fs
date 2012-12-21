@@ -2,14 +2,6 @@
 
     open System.Runtime.Serialization
 
-    type Username = Username of string
-    type Password = Password of string
-    type Credentials = Username * Password
-
-    type GitHubState = {
-        Credentials: Credentials option
-    }
-
     type GitHubResponse<'T> = {
         StatusCode: int
         Content: 'T

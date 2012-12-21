@@ -1,6 +1,7 @@
 ﻿module TestHelper
 
     open GitHub
+    open RestHelper
     open FSharpx
     open FSharpx.TypeProviders.AppSettings
 

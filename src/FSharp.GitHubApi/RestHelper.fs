@@ -2,8 +2,21 @@
 
     open RestSharp
 
+    type Username = Username of string
+    type Password = Password of string
+    type Credentials = Username * Password
+
+    type GitHubState = {
+        Credentials: Credentials option
+    }
+
     let GitHubApiClient state = 
         let mutable client = new RestClient("https://api.github.com")
+        match state.Credentials with
+        | Some(Username(u),Password(p)) ->
+            printfn "Attempting authenticated connection"
+            client.Authenticator <- new HttpBasicAuthenticator(u, p)            
+        | _ -> printfn "Anonymous connection"
         client
 
     type Request = {
