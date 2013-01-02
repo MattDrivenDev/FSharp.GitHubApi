@@ -36,20 +36,12 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <ItemGroup>
+    <Compile Include="TestSettings.fs" />
     <Compile Include="TestHelper.fs" />
     <Compile Include="ApiBasics.fs" />
     <Compile Include="Users.fs" />
-    <Content Include="app.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharpx.Core">
-      <HintPath>..\..\packages\FSharpx.Core\lib\40\FSharpx.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharpx.TypeProviders.AppSettings">
-      <HintPath>..\..\packages\FSharpx.TypeProviders.AppSettings\lib\40\FSharpx.TypeProviders.AppSettings.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>

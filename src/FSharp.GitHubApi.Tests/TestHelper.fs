@@ -2,10 +2,6 @@
 
     open GitHub
     open RestHelper
-    open FSharpx
-    open FSharpx.TypeProviders.AppSettings
-
-    type Settings = AppSettings<"app.config">
 
     type User = {
         Username: string option
@@ -33,8 +29,8 @@
     }
 
     let AuthenticatedUser = {
-        Username = Some(Settings.GitHubUsername.ToString())
-        Password = Some(Settings.GitHubPassword.ToString())
+        Username = Some(TestSettings.GitHubUsername)
+        Password = Some(TestSettings.GitHubPassword)
     }
 
     let DefaultState user =
