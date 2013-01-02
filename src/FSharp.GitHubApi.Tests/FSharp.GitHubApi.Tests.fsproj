@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="TestHelper.fs" />
     <Compile Include="ApiBasics.fs" />
+    <Compile Include="Users.fs" />
     <Content Include="app.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
