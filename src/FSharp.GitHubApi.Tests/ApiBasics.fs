@@ -11,7 +11,7 @@
             let rateLimit = 
                 TestHelper.AnonymousUser
                 |> TestHelper.DefaultState 
-                |> GitHub.RateLimit
+                |> GitHub.GetRateLimit
             printfn "%s" rateLimit.ErrorMessage
             Assert.AreEqual(200, rateLimit.StatusCode)
             Assert.AreEqual(60, rateLimit.Content.Limit)
@@ -22,7 +22,7 @@
             let rateLimit = 
                 TestHelper.AuthenticatedUser
                 |> TestHelper.DefaultState
-                |> GitHub.RateLimit
+                |> GitHub.GetRateLimit
             printfn "%s" rateLimit.ErrorMessage
             Assert.AreEqual(200, rateLimit.StatusCode)
             Assert.AreEqual(5000, rateLimit.Content.Limit)

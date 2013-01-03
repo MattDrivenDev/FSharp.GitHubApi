@@ -1,6 +1,6 @@
 ﻿module Users
 
-    open GitHub
+    open ApiHelper
     open System.Runtime.Serialization
 
     [<DataContract>]
@@ -66,10 +66,30 @@
         [<field: DataMember(Name="plan")>]
         Plan: Plan
     }
-
+        
     type GetParameters = 
         | AuthenticatedUser
         | SpecificUser of string
+
+    type UpdateParams = {
+        Name: string option
+        Email: string option
+        Blog: string option
+        Company: string option
+        Location: string option
+        Hireable: string option
+        Bio: string option
+    }
+
+    let DefaultUpdateParams = {
+        Name = None
+        Email = None
+        Blog = None
+        Company = None
+        Location = None
+        Hireable = None
+        Bio = None
+    }
 
     let internal getSpecificUser username state = 
         match RestHelper.Get { Resource = (sprintf "users/%s" username) } state with
@@ -89,9 +109,21 @@
             | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
         | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
 
-    let Get query state = 
-        match query with
+    let internal Get p state = 
+        match p with
         | AuthenticatedUser ->
             getAuthenticatedUser state 
         | SpecificUser(u) ->
             getSpecificUser u state
+
+    let internal Update p state = 
+        let json = JsonHelper.SerializeJson p
+        let patchResponse = 
+            json |> RestHelper.Patch { Resource = "user" } state
+        match patchResponse with
+        | RestHelper.Success(json) ->
+            let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>
+            match userDetails with
+            | Some(ud) -> { StatusCode = 200; Content = Some(ud); ErrorMessage = "" }
+            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
+        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }

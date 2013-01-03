@@ -48,8 +48,9 @@
   <ItemGroup>
     <Compile Include="JsonHelper.fs" />
     <Compile Include="RestHelper.fs" />
-    <Compile Include="GitHub.fs" />
+    <Compile Include="ApiHelper.fs" />
     <Compile Include="Users.fs" />
+    <Compile Include="GitHub.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

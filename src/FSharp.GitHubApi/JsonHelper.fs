@@ -5,7 +5,7 @@
     open System.Text
     open System.Runtime.Serialization
 
-    let DeserializeJson<'T> json = 
+    let internal DeserializeJson<'T> json = 
         try
             let buffer = Encoding.UTF8.GetBytes(s=json)
             let deserializer = Json.DataContractJsonSerializer(typeof<'T>)
@@ -13,4 +13,12 @@
         with
         | _ ->
             printfn "Cannot deserialize json"
+            None
+
+    let internal SerializeJson T = 
+        try
+            Some("")
+        with
+        | _ ->
+            printfn "Cannot serialize to json"
             None
