@@ -1,6 +1,7 @@
 ﻿namespace FSharp.GitHubApi.Tests
 
     open NUnit.Framework
+    open FSharp.GitHubApi
 
     [<TestFixture>]
     [<Category("FirstPass")>]
@@ -12,8 +13,6 @@
                 TestHelper.AnonymousUser
                 |> TestHelper.DefaultState 
                 |> GitHub.GetRateLimit
-            printfn "%s" rateLimit.ErrorMessage
-            Assert.AreEqual(200, rateLimit.StatusCode)
             Assert.AreEqual(60, rateLimit.Content.Limit)
             Assert.LessOrEqual(rateLimit.Content.Remaining, 60)
 
@@ -23,7 +22,5 @@
                 TestHelper.AuthenticatedUser
                 |> TestHelper.DefaultState
                 |> GitHub.GetRateLimit
-            printfn "%s" rateLimit.ErrorMessage
-            Assert.AreEqual(200, rateLimit.StatusCode)
             Assert.AreEqual(5000, rateLimit.Content.Limit)
             Assert.LessOrEqual(rateLimit.Content.Remaining, 5000)

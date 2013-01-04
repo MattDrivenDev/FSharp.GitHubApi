@@ -1,8 +1,11 @@
-﻿module Users
+﻿module FSharp.GitHubApi.Users
 
-    open ApiHelper
+    open FSharp.GitHubApi.ApiHelper
     open System.Runtime.Serialization
 
+    // -------------------- //
+    // Public data types    //
+    // -------------------- //
     [<DataContract>]
     type Plan = {
         [<field: DataMember(Name="name")>]
@@ -91,8 +94,11 @@
         Bio = None
     }
 
-    let internal getSpecificUser username state = 
-        match RestHelper.Get { Resource = (sprintf "users/%s" username) } state with
+    // -------------------- //
+    // Internal functions   //
+    // -------------------- //
+    let internal getUserRestResponse request state = 
+        match RestHelper.Get request state with
         | RestHelper.Success(json) ->
             let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>
             match userDetails with
@@ -100,21 +106,16 @@
             | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
         | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
 
+    let internal getSpecificUser username state = 
+        state |> getUserRestResponse { Resource = (sprintf "users/%s" username) }
+
     let internal getAuthenticatedUser state = 
-        match RestHelper.Get { Resource = "user" } state with
-        | RestHelper.Success(json) ->
-            let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>
-            match userDetails with
-            | Some(ud) -> { StatusCode = 200; Content = Some(ud); ErrorMessage = "" }
-            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+        state |> getUserRestResponse { Resource = "user" }
 
     let internal Get p state = 
         match p with
-        | AuthenticatedUser ->
-            getAuthenticatedUser state 
-        | SpecificUser(u) ->
-            getSpecificUser u state
+        | AuthenticatedUser -> getAuthenticatedUser state 
+        | SpecificUser(u) -> getSpecificUser u state
 
     let internal Update p state = 
         let json = JsonHelper.SerializeJson p

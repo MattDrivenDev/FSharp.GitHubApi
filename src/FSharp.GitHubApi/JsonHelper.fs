@@ -1,10 +1,13 @@
-﻿module JsonHelper
+﻿module FSharp.GitHubApi.JsonHelper
 
     open System
     open System.IO
     open System.Text
-    open System.Runtime.Serialization
+    open System.Runtime.Serialization    
 
+    // -------------------- //
+    // Internal functions   //
+    // -------------------- //
     let internal DeserializeJson<'T> json = 
         try
             let buffer = Encoding.UTF8.GetBytes(s=json)

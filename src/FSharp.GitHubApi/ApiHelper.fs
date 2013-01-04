@@ -1,7 +1,10 @@
-﻿module ApiHelper
+﻿module FSharp.GitHubApi.ApiHelper
 
     open System.Runtime.Serialization
-
+        
+    // -------------------- //
+    // Public data types    //
+    // -------------------- //
     type GitHubResponse<'T> = {
         StatusCode: int
         Content: 'T
@@ -22,6 +25,9 @@
         Rate: Rate
     }
 
+    // -------------------- //
+    // Internal functions   //
+    // -------------------- //
     let internal RateLimit state =         
         match RestHelper.Get { Resource = "rate_limit" } state with
         | RestHelper.Success(json) ->

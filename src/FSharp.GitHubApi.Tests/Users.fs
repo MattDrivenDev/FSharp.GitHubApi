@@ -1,20 +1,26 @@
 ﻿namespace FSharp.GitHubApi.Users
 
     open NUnit.Framework
+    open FSharp.GitHubApi
+    open FSharp.GitHubApi.Users
 
     [<TestFixture>]
     [<Category("FirstPass")>]
     type Users() =
 
+        let getUserResponse p = 
+            TestHelper.AuthenticatedUser
+            |> TestHelper.DefaultState
+            |> GitHub.GetUser p
+
+        let updateUserResponse p = 
+            TestHelper.AuthenticatedUser
+            |> TestHelper.DefaultState
+            |> GitHub.UpdateUser p
+
         [<Test>]
         member this.``should be able to get a specified user``() =
-            let getParams = Users.SpecificUser("saxonmatt")
-            let userResponse = 
-                TestHelper.AuthenticatedUser
-                |> TestHelper.DefaultState
-                |> GitHub.GetUser getParams
-            printfn "%s" userResponse.ErrorMessage
-            Assert.AreEqual(200, userResponse.StatusCode)
+            let userResponse = getUserResponse (SpecificUser("saxonmatt"))
             match userResponse.Content with
             | Some(user) ->
                 Assert.IsTrue(user.Login.Equals("saxonmatt"))
@@ -23,14 +29,8 @@
             | None -> Assert.Fail()
 
         [<Test>]
-        member this.``should be able to get current authenticated user``() =
-            let getParams = Users.AuthenticatedUser
-            let userResponse = 
-                TestHelper.AuthenticatedUser
-                |> TestHelper.DefaultState
-                |> GitHub.GetUser getParams
-            printfn "%s" userResponse.ErrorMessage
-            Assert.AreEqual(200, userResponse.StatusCode)
+        member this.``should be able to get current authenticated user``() =            
+            let userResponse = getUserResponse AuthenticatedUser
             match userResponse.Content with
             | Some(user) ->
                 Assert.IsTrue(user.Login.Equals(TestSettings.GitHubUsername))
@@ -41,18 +41,9 @@
         [<Test>]
         member this.``should be able to update the current authenticated user``() =
             let newName = sprintf "edited-%s" TestSettings.GitHubName
-            let updateParams = { Users.DefaultUpdateParams with Name = Some(newName) }
-            let updateResponse = 
-                TestHelper.AuthenticatedUser
-                |> TestHelper.DefaultState
-                |> GitHub.UpdateUser updateParams
-            printfn "%s" updateResponse.ErrorMessage
-            Assert.AreEqual(200, updateResponse.StatusCode)
+            let updateResponse = updateUserResponse { DefaultUpdateParams with Name = Some(newName) }
             match updateResponse.Content with
             | Some(user) -> 
                 Assert.IsTrue(user.Name.Equals(newName))
-                TestHelper.AuthenticatedUser
-                |> TestHelper.DefaultState
-                |> GitHub.UpdateUser { updateParams with Name = Some(TestSettings.GitHubName) }
-                |> ignore
+                updateUserResponse { DefaultUpdateParams with Name = Some(TestSettings.GitHubName) } |> ignore
             | None -> Assert.Fail()
