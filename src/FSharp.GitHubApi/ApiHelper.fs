@@ -1,6 +1,6 @@
 ﻿module FSharp.GitHubApi.ApiHelper
 
-    open System.Runtime.Serialization
+    open Newtonsoft.Json
         
     // -------------------- //
     // Public data types    //
@@ -11,18 +11,13 @@
         ErrorMessage: string
     }
 
-    [<DataContract>]
     type Rate = {
-        [<field: DataMember(Name="remaining")>]
-        Remaining: int
-        [<field: DataMember(Name="limit")>]
-        Limit: int
+        [<field: JsonProperty(PropertyName="remaining")>] Remaining : int
+        [<field: JsonProperty(PropertyName="limit")>] Limit         : int
     }
 
-    [<DataContract>]
     type RateLimit = {        
-        [<field: DataMember(Name="rate")>]
-        Rate: Rate
+        [<field: JsonProperty(PropertyName="rate")>] Rate           : Rate
     }
 
     // -------------------- //

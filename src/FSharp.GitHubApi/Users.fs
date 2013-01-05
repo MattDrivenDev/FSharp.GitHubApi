@@ -1,73 +1,72 @@
 ﻿module FSharp.GitHubApi.Users
 
+    open System
     open FSharp.GitHubApi.ApiHelper
-    open System.Runtime.Serialization
+    open Newtonsoft.Json
 
     // -------------------- //
     // Public data types    //
     // -------------------- //
-    [<DataContract>]
     type Plan = {
-        [<field: DataMember(Name="name")>]
-        Name: string
-        [<field: DataMember(Name="space")>]
-        Space: int
-        [<field: DataMember(Name="collaborators")>]
-        Collaborators: int
-        [<field: DataMember(Name="private_repos")>]
-        PrivateRepos: int        
+        [<field: JsonProperty(PropertyName="name")>] 
+        Name : string
+        [<field: JsonProperty(PropertyName="space", Required=Required.Default)>]
+        Space : int
+        [<field: JsonProperty(PropertyName="collaborators", Required=Required.Default)>] 
+        Collaborators : int
+        [<field: JsonProperty(PropertyName="private_repos", Required=Required.Default)>] 
+        PrivateRepos : int   
     }
 
-    [<DataContract>]
     type UserDetails = {
-        [<field: DataMember(Name="login")>]
-        Login: string
-        [<field: DataMember(Name="id")>]
-        Id: int
-        [<field: DataMember(Name="avatar_url")>]
-        AvatarUrl: string
-        [<field: DataMember(Name="gravatar_id")>]
-        GravatarId: string
-        [<field: DataMember(Name="url")>]
-        Url: string
-        [<field: DataMember(Name="name")>]
-        Name: string
-        [<field: DataMember(Name="company")>]
-        Company: string
-        [<field: DataMember(Name="blog")>]
-        Blog: string
-        [<field: DataMember(Name="location")>]
-        Location: string
-        [<field: DataMember(Name="email")>]
-        Email: string
-        [<field: DataMember(Name="hireable")>]
-        Hireable: bool
-        [<field: DataMember(Name="bio")>]
-        Bio: string
-        [<field: DataMember(Name="public_repos")>]
-        PublicRepos: int
-        [<field: DataMember(Name="public_gists")>]
-        PublicGists: int
-        [<field: DataMember(Name="followers")>]
-        Followers: int
-        [<field: DataMember(Name="following")>]
-        Following: int
-        [<field: DataMember(Name="html_url")>]
-        HtmlUrl: string
-        [<field: DataMember(Name="type")>]
-        Type: string
-        [<field: DataMember(Name="total_private_repos")>]
-        TotalPrivateRepos: int
-        [<field: DataMember(Name="owned_private_repos")>]
-        OwnedPrivateRepos: int
-        [<field: DataMember(Name="private_gists")>]
-        PrivateGists: int
-        [<field: DataMember(Name="disk_usage")>]
-        DiskUsage: int
-        [<field: DataMember(Name="collaborators")>]
-        Collaborators: int
-        [<field: DataMember(Name="plan")>]
-        Plan: Plan
+        [<field: JsonProperty(PropertyName="login")>] 
+        Login : string
+        [<field: JsonProperty(PropertyName="id", Required=Required.Default)>] 
+        Id : int
+        [<field: JsonProperty(PropertyName="avatar_url")>] 
+        AvatarUrl : string
+        [<field: JsonProperty(PropertyName="gravatar_id")>] 
+        GravatarId : string
+        [<field: JsonProperty(PropertyName="url")>] 
+        Url : string
+        [<field: JsonProperty(PropertyName="name")>] 
+        Name : string
+        [<field: JsonProperty(PropertyName="company")>] 
+        Company : string
+        [<field: JsonProperty(PropertyName="blog")>] 
+        Blog : string
+        [<field: JsonProperty(PropertyName="location")>] 
+        Location : string
+        [<field: JsonProperty(PropertyName="email")>] 
+        Email : string
+        [<field: JsonProperty(PropertyName="hireable", Required=Required.AllowNull)>] 
+        Hireable : Nullable<bool>
+        [<field: JsonProperty(PropertyName="bio")>] 
+        Bio : string
+        [<field: JsonProperty(PropertyName="public_repos", Required=Required.Default)>] 
+        PublicRepos : int
+        [<field: JsonProperty(PropertyName="public_gists", Required=Required.Default)>] 
+        PublicGists : int
+        [<field: JsonProperty(PropertyName="followers", Required=Required.Default)>] 
+        Followers : int
+        [<field: JsonProperty(PropertyName="following", Required=Required.Default)>] 
+        Following : int
+        [<field: JsonProperty(PropertyName="html_url")>] 
+        HtmlUrl : string
+        [<field: JsonProperty(PropertyName="type")>] 
+        Type : string
+        [<field: JsonProperty(PropertyName="total_private_repos", Required=Required.Default)>] 
+        TotalPrivateRepos : int
+        [<field: JsonProperty(PropertyName="owned_private_repos", Required=Required.Default)>] 
+        OwnedPrivateRepos : int
+        [<field: JsonProperty(PropertyName="private_gists", Required=Required.Default)>] 
+        PrivateGists : int
+        [<field: JsonProperty(PropertyName="disk_usage", Required=Required.Default)>] 
+        DiskUsage : int
+        [<field: JsonProperty(PropertyName="collaborators", Required=Required.Default)>] 
+        Collaborators : int
+        [<field: JsonProperty(PropertyName="plan")>] 
+        Plan : Plan
     }
         
     type GetParameters = 
@@ -75,28 +74,35 @@
         | SpecificUser of string
 
     type UpdateParams = {
-        Name: string option
-        Email: string option
-        Blog: string option
-        Company: string option
-        Location: string option
-        Hireable: string option
-        Bio: string option
-    }
-
-    let DefaultUpdateParams = {
-        Name = None
-        Email = None
-        Blog = None
-        Company = None
-        Location = None
-        Hireable = None
-        Bio = None
+        [<JsonProperty(PropertyName="name", NullValueHandling=NullValueHandling.Ignore)>] 
+        Name : string
+        [<JsonProperty(PropertyName="email", NullValueHandling=NullValueHandling.Ignore)>] 
+        Email : string
+        [<JsonProperty(PropertyName="blog", NullValueHandling=NullValueHandling.Ignore)>] 
+        Blog : string
+        [<JsonProperty(PropertyName="company", NullValueHandling=NullValueHandling.Ignore)>] 
+        Company : string
+        [<JsonProperty(PropertyName="location", NullValueHandling=NullValueHandling.Ignore)>] 
+        Location : string
+        [<JsonProperty(PropertyName="hireable", NullValueHandling=NullValueHandling.Ignore)>] 
+        Hireable : string
+        [<JsonProperty(PropertyName="bio", NullValueHandling=NullValueHandling.Ignore)>] 
+        Bio : string
     }
 
     // -------------------- //
     // Internal functions   //
     // -------------------- //
+    let internal defaultUpdateParams = {
+        Name        = null
+        Email       = null
+        Blog        = null
+        Company     = null
+        Location    = null
+        Hireable    = null
+        Bio         = null
+    }
+
     let internal getUserRestResponse request state = 
         match RestHelper.Get request state with
         | RestHelper.Success(json) ->
@@ -117,10 +123,9 @@
         | AuthenticatedUser -> getAuthenticatedUser state 
         | SpecificUser(u) -> getSpecificUser u state
 
-    let internal Update p state = 
-        let json = JsonHelper.SerializeJson p
+    let internal Update (p:UpdateParams->UpdateParams) state = 
         let patchResponse = 
-            json |> RestHelper.Patch { Resource = "user" } state
+            p(defaultUpdateParams) |> JsonHelper.SerializeToJson |> RestHelper.Patch { Resource = "user" } state
         match patchResponse with
         | RestHelper.Success(json) ->
             let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>

@@ -51,5 +51,6 @@
     let internal Patch request state json =
         let client = state |> GitHubApiClient
         let mutable patch = new RestRequest(request.Resource, Method.PATCH)
-        patch.AddParameter("RequestBody", json)
+        patch.RequestFormat <- DataFormat.Json
+        patch.AddParameter(@"application\json", json, ParameterType.RequestBody) |> ignore        
         client.Execute(request=patch) |> handleRestResponse

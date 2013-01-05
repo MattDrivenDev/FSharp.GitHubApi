@@ -3,25 +3,22 @@
     open System
     open System.IO
     open System.Text
-    open System.Runtime.Serialization    
+    open Newtonsoft.Json
 
     // -------------------- //
     // Internal functions   //
     // -------------------- //
     let internal DeserializeJson<'T> json = 
         try
-            let buffer = Encoding.UTF8.GetBytes(s=json)
-            let deserializer = Json.DataContractJsonSerializer(typeof<'T>)
-            Some(deserializer.ReadObject(new MemoryStream(buffer)) :?> 'T)
+            Some(JsonConvert.DeserializeObject<'T>(value=json))
         with
-        | _ ->
-            printfn "Cannot deserialize json"
+        | ex ->
+            printfn "Cannot deserialize json: %s" ex.Message
             None
 
-    let internal SerializeJson T = 
+    let internal SerializeToJson t =   
         try
-            Some("")
+            JsonConvert.SerializeObject(t)
         with
-        | _ ->
-            printfn "Cannot serialize to json"
-            None
+        | ex ->
+            sprintf "Cannot serialize record type: %s" ex.Message

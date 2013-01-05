@@ -7,7 +7,7 @@
     [<TestFixture>]
     [<Category("FirstPass")>]
     type Users() =
-
+            
         let getUserResponse p = 
             TestHelper.AuthenticatedUser
             |> TestHelper.DefaultState
@@ -16,7 +16,7 @@
         let updateUserResponse p = 
             TestHelper.AuthenticatedUser
             |> TestHelper.DefaultState
-            |> GitHub.UpdateUser p
+            |> GitHub.UpdateUser p          
 
         [<Test>]
         member this.``should be able to get a specified user``() =
@@ -36,14 +36,14 @@
                 Assert.IsTrue(user.Login.Equals(TestSettings.GitHubUsername))
                 Assert.IsTrue(user.Name.Equals(TestSettings.GitHubName))
                 Assert.IsTrue(user.Plan.Name.Equals(TestSettings.GitHubPlan))  
-            | None -> Assert.Fail()         
+            | None -> Assert.Fail()       
 
         [<Test>]
         member this.``should be able to update the current authenticated user``() =
             let newName = sprintf "edited-%s" TestSettings.GitHubName
-            let updateResponse = updateUserResponse { DefaultUpdateParams with Name = Some(newName) }
+            let updateResponse = updateUserResponse (fun x -> { x with Name = newName })
             match updateResponse.Content with
             | Some(user) -> 
                 Assert.IsTrue(user.Name.Equals(newName))
-                updateUserResponse { DefaultUpdateParams with Name = Some(TestSettings.GitHubName) } |> ignore
+                updateUserResponse (fun x -> { x with Name = TestSettings.GitHubName }) |> ignore
             | None -> Assert.Fail()
