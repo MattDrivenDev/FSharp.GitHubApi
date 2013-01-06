@@ -18,6 +18,19 @@
         PrivateRepos : int   
     }
 
+    type UserSummary = {
+        [<field: JsonProperty(PropertyName="login")>]
+        Login: string
+        [<field: JsonProperty(PropertyName="id")>]
+        Id: int
+        [<field: JsonProperty(PropertyName="avatar_url")>]
+        AvatarUrl: string
+        [<field: JsonProperty(PropertyName="gravatar_id")>]
+        GravatarId: string
+        [<field: JsonProperty(PropertyName="url")>]
+        Url: string
+    }
+
     type UserDetails = {
         [<field: JsonProperty(PropertyName="login")>] 
         Login : string
@@ -132,4 +145,15 @@
             match userDetails with
             | Some(ud) -> { StatusCode = 200; Content = Some(ud); ErrorMessage = "" }
             | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
+        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+
+    let internal GetAll since state = 
+        let usersResponse = 
+            RestHelper.Get { Resource = (sprintf "users?since=%i" since) } state
+        match usersResponse with
+        | RestHelper.Success(json) ->
+            let userCollection = json |> JsonHelper.DeserializeJson<UserSummary array>
+            match userCollection with
+            | Some(c) -> { StatusCode = 200; Content = userCollection; ErrorMessage = "" }
+            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User summaries, return api default instead" }
         | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }

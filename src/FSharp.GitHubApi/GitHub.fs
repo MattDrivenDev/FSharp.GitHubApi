@@ -16,3 +16,6 @@
 
     let UpdateUser = 
         Users.Update
+
+    let GetAllUsers = 
+        Users.GetAll
