@@ -11,6 +11,7 @@ The Api current supports the following:
 * [Get a single user](http://developer.github.com/v3/users/#get-a-single-user)
 * [Get the authenticated user](http://developer.github.com/v3/users/#get-the-authenticated-user)
 * [Update the authenticated user](http://developer.github.com/v3/users/#update-the-authenticated-user)
+* [Get all users](http://developer.github.com/v3/users/#get-all-users)
 
 ##Notes##
 
