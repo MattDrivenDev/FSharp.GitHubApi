@@ -40,6 +40,7 @@
     <Compile Include="TestHelper.fs" />
     <Compile Include="ApiBasics.fs" />
     <Compile Include="Users.fs" />
+    <Compile Include="Repositories.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
