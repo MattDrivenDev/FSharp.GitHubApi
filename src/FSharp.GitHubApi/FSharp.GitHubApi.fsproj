@@ -52,6 +52,7 @@
     <Compile Include="RestHelper.fs" />
     <Compile Include="ApiHelper.fs" />
     <Compile Include="Users.fs" />
+    <Compile Include="Repositories.fs" />
     <Compile Include="GitHub.fs" />
   </ItemGroup>
   <PropertyGroup>

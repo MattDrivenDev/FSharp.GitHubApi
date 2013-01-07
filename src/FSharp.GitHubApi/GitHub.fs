@@ -19,3 +19,9 @@
 
     let GetAllUsers = 
         Users.GetAll
+
+    // -------------------- //
+    // Repositories Api     //
+    // -------------------- //
+    let ListRepositories = 
+        Repositories.List

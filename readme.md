@@ -12,6 +12,7 @@ The Api current supports the following:
 * [Get the authenticated user](http://developer.github.com/v3/users/#get-the-authenticated-user)
 * [Update the authenticated user](http://developer.github.com/v3/users/#update-the-authenticated-user)
 * [Get all users](http://developer.github.com/v3/users/#get-all-users)
+* [List the authenticated user repositories](http://developer.github.com/v3/repos/#list-your-repositories)
 
 ##Notes##
 
