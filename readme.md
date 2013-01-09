@@ -13,6 +13,8 @@ The Api current supports the following:
 * [Update the authenticated user](http://developer.github.com/v3/users/#update-the-authenticated-user)
 * [Get all users](http://developer.github.com/v3/users/#get-all-users)
 * [List the authenticated user repositories](http://developer.github.com/v3/repos/#list-your-repositories)
+* [List a specified user's repositories](http://developer.github.com/v3/repos/#list-user-repositories)
+* [List an organization's repositories](http://developer.github.com/v3/repos/#list-organization-repositories)
 
 ##Notes##
 
