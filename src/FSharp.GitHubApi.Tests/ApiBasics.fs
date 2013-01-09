@@ -13,8 +13,11 @@
                 TestHelper.AnonymousUser
                 |> TestHelper.DefaultState 
                 |> GitHub.GetRateLimit
-            Assert.AreEqual(60, rateLimit.Content.Limit)
-            Assert.LessOrEqual(rateLimit.Content.Remaining, 60)
+            match rateLimit.Content with
+            | Some(x) ->
+                Assert.AreEqual(60, x.Rate.Limit)
+                Assert.LessOrEqual(x.Rate.Remaining, 60)
+            | None -> Assert.Fail()
 
         [<Test>]
         member this.``should have a limit of 5000 for authenticated users``() =
@@ -22,5 +25,8 @@
                 TestHelper.AuthenticatedUser
                 |> TestHelper.DefaultState
                 |> GitHub.GetRateLimit
-            Assert.AreEqual(5000, rateLimit.Content.Limit)
-            Assert.LessOrEqual(rateLimit.Content.Remaining, 5000)
+            match rateLimit.Content with
+            | Some(x) ->
+                Assert.AreEqual(5000, x.Rate.Limit)
+                Assert.LessOrEqual(x.Rate.Remaining, 5000)
+            | None -> Assert.Fail()

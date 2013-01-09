@@ -1,24 +1,19 @@
 ﻿module FSharp.GitHubApi.ApiHelper
 
     open Newtonsoft.Json
+    open System.IO
+    open FSharp.Data
         
     // -------------------- //
     // Public data types    //
     // -------------------- //
     type GitHubResponse<'T> = {
         StatusCode: int
-        Content: 'T
+        Content: 'T option
         ErrorMessage: string
     }
 
-    type Rate = {
-        [<field: JsonProperty(PropertyName="remaining")>] Remaining : int
-        [<field: JsonProperty(PropertyName="limit")>] Limit         : int
-    }
-
-    type RateLimit = {        
-        [<field: JsonProperty(PropertyName="rate")>] Rate           : Rate
-    }
+    type RateLimit = JsonProvider<""" { "rate": { "remaining": 4999, "limit": 5000 } }""">    
 
     // -------------------- //
     // Internal functions   //
@@ -26,8 +21,10 @@
     let internal RateLimit state =         
         match RestHelper.Get { Resource = "rate_limit" } state with
         | RestHelper.Success(json) ->
-            let rateLimit = json |> JsonHelper.DeserializeJson<RateLimit>
-            match rateLimit with
-            | Some(rl) -> { StatusCode = 200; Content = rl.Rate; ErrorMessage = ""; }
-            | None -> { StatusCode = 200; Content = { Remaining = 0; Limit = 0; }; ErrorMessage = "Cannot deserialize RateLimit" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = { Remaining = 0; Limit = 0; }; ErrorMessage = reason; }
+            try
+                let rateLimit = json |> RateLimit.Parse
+                { StatusCode = 200; Content = Some(rateLimit); ErrorMessage = ""; }
+            with
+            | ex ->
+                { StatusCode = 200; Content = None; ErrorMessage = ex.Message }
+        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason; }
