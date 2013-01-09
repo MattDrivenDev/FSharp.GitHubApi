@@ -72,7 +72,7 @@
     type UserOrOrganization = 
         | AuthenticatedUser
         | SpecifiedUser of string
-        | Organisation of string
+        | Organization of string
 
     type Type = | All | Owner | Public | Private | Member
     type Direction = | Ascending | Descending
@@ -104,7 +104,7 @@
             match p.Owner with
             | AuthenticatedUser -> "user/repos"
             | SpecifiedUser(x) -> sprintf "users/%s/repos" x
-            | Organisation(x) -> sprintf "orgs/%s/repos" x
+            | Organization(x) -> sprintf "orgs/%s/repos" x
         sprintf "%s?type=%A&sort=%A&direction=%A" resource p.Type p.Sort p.Direction
 
     let internal List (p:ListParams->ListParams) state =         
