@@ -48,9 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonHelper.fs" />
-    <Compile Include="RestHelper.fs" />
     <Compile Include="ApiHelper.fs" />
+    <Compile Include="RestHelper.fs" />
+    <Compile Include="JsonHelper.fs" />
+    <Compile Include="RateLimiting.fs" />
     <Compile Include="Users.fs" />
     <Compile Include="Repositories.fs" />
     <Compile Include="GitHub.fs" />
