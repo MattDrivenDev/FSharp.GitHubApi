@@ -6,7 +6,7 @@
     // Api Basics           //
     // -------------------- //
     let GetRateLimit = 
-        ApiHelper.RateLimit
+        RateLimiting.Check
 
     // -------------------- //
     // Users Api            //
@@ -25,3 +25,9 @@
     // -------------------- //
     let ListRepositories = 
         Repositories.List
+
+    let CreateRepository = 
+        Repositories.Create
+
+    let DeleteRepository = 
+        Repositories.Delete

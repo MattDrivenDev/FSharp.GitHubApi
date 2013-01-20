@@ -1,8 +1,9 @@
 ﻿module FSharp.GitHubApi.Users
 
     open System
-    open FSharp.GitHubApi.ApiHelper
     open Newtonsoft.Json
+    open RestHelper
+    open JsonHelper
 
     // -------------------- //
     // Public data types    //
@@ -116,44 +117,36 @@
         Bio         = null
     }
 
-    let internal getUserRestResponse request state = 
-        match RestHelper.Get request state with
-        | RestHelper.Success(json) ->
-            let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>
-            match userDetails with
-            | Some(ud) -> { StatusCode = 200; Content = Some(ud); ErrorMessage = "" }
-            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+    let internal getCurrent state = 
+        let request = (fun x -> { x with RestResource = "user"})
+        let resolve x =
+            deserialize { return typeof<UserDetails>,
+            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        resolve request            
 
-    let internal getSpecificUser username state = 
-        state |> getUserRestResponse { Resource = (sprintf "users/%s" username) }
-
-    let internal getAuthenticatedUser state = 
-        state |> getUserRestResponse { Resource = "user" }
+    let internal getSpecified username state =
+        let request = (fun x -> { x with RestResource = (sprintf "users/%s" username)})
+        let resolve x =
+            deserialize { return typeof<UserDetails>,
+            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        resolve request
 
     let internal Get p state = 
         match p with
-        | AuthenticatedUser -> getAuthenticatedUser state 
-        | SpecificUser(u) -> getSpecificUser u state
-
+        | AuthenticatedUser -> getCurrent state
+        | SpecificUser(x) -> getSpecified x state
+            
     let internal Update (p:UpdateParams->UpdateParams) state = 
-        let patchResponse = 
-            p(defaultUpdateParams) |> JsonHelper.SerializeToJson |> RestHelper.Patch { Resource = "user" } state
-        match patchResponse with
-        | RestHelper.Success(json) ->
-            let userDetails = json |> JsonHelper.DeserializeJson<UserDetails>
-            match userDetails with
-            | Some(ud) -> { StatusCode = 200; Content = Some(ud); ErrorMessage = "" }
-            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User details, returned api default instead" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+        let json = serialize { return p(defaultUpdateParams) }
+        let request = (fun x -> { x with Method = PATCH; RestResource = "user"; Content = json })
+        let resolve x =
+            deserialize { return typeof<UserDetails>,
+            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        resolve request
 
     let internal GetAll since state = 
-        let usersResponse = 
-            RestHelper.Get { Resource = (sprintf "users?since=%i" since) } state
-        match usersResponse with
-        | RestHelper.Success(json) ->
-            let userCollection = json |> JsonHelper.DeserializeJson<UserSummary array>
-            match userCollection with
-            | Some(c) -> { StatusCode = 200; Content = userCollection; ErrorMessage = "" }
-            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize User summaries, return api default instead" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+        let request = (fun x -> { x with RestResource = (sprintf "users?since=%i" since) })
+        let resolve x = 
+            deserialize { return typeof<UserSummary array>,
+            ConvertResponse<UserSummary array>(restfulResponse { return x, state}) }
+        resolve request
