@@ -15,6 +15,8 @@ The Api current supports the following:
 * [List the authenticated user repositories](http://developer.github.com/v3/repos/#list-your-repositories)
 * [List a specified user's repositories](http://developer.github.com/v3/repos/#list-user-repositories)
 * [List an organization's repositories](http://developer.github.com/v3/repos/#list-organization-repositories)
+* [Create a new user repository](http://developer.github.com/v3/repos/#create)
+* [Delete an existing repository](http://developer.github.com/v3/repos/#delete-a-repository)
 
 ##Notes##
 
