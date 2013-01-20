@@ -1,5 +1,6 @@
 ﻿namespace FSharp.GitHubApi.Tests.Repositories
 
+    open System.Net
     open NUnit.Framework
     open FSharp.GitHubApi
     open FSharp.GitHubApi.Repositories
@@ -32,4 +33,21 @@
             let x = getUserRepositoriesResponse (fun p -> { p with Owner = Organization("fsharp"); })
             match x.Content with
             | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
+            | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to create and delete a repository``() =
+            let state = TestHelper.AuthenticatedUser |> TestHelper.DefaultState
+            
+            let deleteRepository n = 
+                state |> GitHub.DeleteRepository (fun p -> { p with Owner = TestSettings.GitHubUsername; RepoName = n })
+                            
+            let x = state |> GitHub.CreateRepository (fun p -> { p with RepoName = TestSettings.TestRepoName })
+            match x.Content with
+            | Content(y) -> 
+                Assert.IsTrue(y.Name.Equals(TestSettings.TestRepoName))            
+                let d = deleteRepository TestSettings.TestRepoName
+                match d.StatusCode with
+                | HttpStatusCode.NoContent -> Assert.Pass()
+                | _ -> Assert.Fail()
             | _ -> Assert.Fail()

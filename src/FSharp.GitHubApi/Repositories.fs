@@ -90,6 +90,34 @@
         Direction : Direction
     }    
 
+    type CreateParams = {
+        [<JsonProperty(PropertyName="name")>]
+        RepoName : string
+        [<JsonProperty(PropertyName="description")>]
+        Description : string
+        [<JsonProperty(PropertyName="homepage")>]
+        Homepage : string
+        [<JsonProperty(PropertyName="private")>]
+        Private : bool
+        [<JsonProperty(PropertyName="has_issues")>]
+        HasIssues : bool
+        [<JsonProperty(PropertyName="has_wiki")>]
+        HasWiki : bool
+        [<JsonProperty(PropertyName="has_downloads")>]
+        HasDownloads : bool
+        [<JsonProperty(PropertyName="team_id")>]
+        TeamId : int
+        [<JsonProperty(PropertyName="auto_init")>]
+        AutoInit : bool
+        [<JsonProperty(PropertyName="gitignore_template")>]
+        GitIgnoreTemplate : string
+    }
+
+    type DeleteParams = {
+        RepoName : string
+        Owner : string
+    }
+
     // -------------------- //
     // Internal functions   //
     // -------------------- //
@@ -100,7 +128,25 @@
         Direction = Ascending
     }
 
-    let internal buildRequestResource p =
+    let internal defaultCreateParams = {
+        RepoName = null
+        Description = null
+        Homepage = null
+        Private = false
+        HasIssues = true
+        HasWiki = true
+        HasDownloads = true
+        TeamId = 0
+        AutoInit = false
+        GitIgnoreTemplate = null
+    }
+
+    let internal defaultDeleteParams = {
+        RepoName = null
+        Owner = null
+    }
+
+    let internal buildListResource (p:ListParams) =
         let resource = 
             match p.Owner with
             | AuthenticatedUser -> "user/repos"
@@ -108,9 +154,26 @@
             | Organization(x) -> sprintf "orgs/%s/repos" x
         sprintf "%s?type=%A&sort=%A&direction=%A" resource p.Type p.Sort p.Direction
 
+    let internal buildDeleteResource (p:DeleteParams) = 
+        sprintf "repos/%s/%s" p.Owner p.RepoName
+
     let internal List (p:ListParams->ListParams) state = 
-        let request = (fun x -> { x with RestResource = (buildRequestResource (p(defaultListParams))) })
+        let request = (fun x -> { x with RestResource = (buildListResource (p(defaultListParams))) })
         let resolve x = 
             deserialize { return typeof<Repository array>,
             ConvertResponse<Repository array>(restfulResponse { return x, state}) }
+        resolve request
+
+    let internal Create (p:CreateParams->CreateParams) state =         
+        let json = serialize { return (p(defaultCreateParams)) }
+        let request = (fun x -> { x with RestResource = "user/repos"; Method = POST; Content = json; })
+        let resolve x = 
+            deserialize { return typeof<Repository>,
+            ConvertResponse<Repository>(restfulResponse { return x, state}) }
+        resolve request
+
+    let internal Delete (p:DeleteParams->DeleteParams) state = 
+        let request = (fun x -> { x with RestResource = (buildDeleteResource (p(defaultDeleteParams))); Method = DELETE; })
+        let resolve x = 
+            ConvertResponse<Repository>(restfulResponse { return x, state})
         resolve request

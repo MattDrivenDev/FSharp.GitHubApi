@@ -25,3 +25,9 @@
     // -------------------- //
     let ListRepositories = 
         Repositories.List
+
+    let CreateRepository = 
+        Repositories.Create
+
+    let DeleteRepository = 
+        Repositories.Delete

@@ -58,6 +58,18 @@
         patch.AddParameter(@"application\json", json, ParameterType.RequestBody) |> ignore        
         client.Execute(request=patch)
 
+    let internal Post request state json =
+        let client = state |> GitHubApiClient
+        let mutable post = new RestRequest(request.RestResource, Method.POST)
+        post.RequestFormat <- DataFormat.Json
+        post.AddParameter(@"application\json", json, ParameterType.RequestBody) |> ignore        
+        client.Execute(request=post)
+
+    let internal Delete request state = 
+        let client = state |> GitHubApiClient
+        let delete = new RestRequest(request.RestResource, Method.DELETE)
+        client.Execute(request=delete)
+
     type internal RestClient() =
         member this.Bind(x) = x
         member this.Delay(f) = f()
@@ -65,6 +77,8 @@
             let r = request |> x 
             match r.Method with
             | PATCH -> Patch r s r.Content
+            | POST -> Post r s r.Content
+            | DELETE -> Delete r s
             | _ -> Get r s
                 
     let internal restfulResponse = new RestClient()

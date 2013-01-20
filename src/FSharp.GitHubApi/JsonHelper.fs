@@ -25,6 +25,8 @@
             match r.StatusCode with            
             | HttpStatusCode.OK ->
                 { r with Content = Content(JsonConvert.DeserializeObject<'T>(r.ContentRaw)) }
+            | HttpStatusCode.Created ->
+                { r with Content = Content(JsonConvert.DeserializeObject<'T>(r.ContentRaw)) }
             | HttpStatusCode.Unauthorized ->
                 { r with Content = Error(JsonConvert.DeserializeObject<Message>(r.ContentRaw)) }
             | _ -> { r with ResponseStatus = Some(ErrorResponse(r.StatusDescription)) }
