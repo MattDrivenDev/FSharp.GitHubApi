@@ -15,21 +15,21 @@
 
         [<Test>]
         member this.``should be able to get current authenticated user's repositories``() =
-            let repositoryResponse = getUserRepositoriesResponse (fun p -> { p with Owner = AuthenticatedUser; })
-            match repositoryResponse.Content with
-            | Some(x) -> Assert.GreaterOrEqual(x.Length, 1)
-            | None -> Assert.Fail()
+            let x = getUserRepositoriesResponse (fun p -> { p with Owner = AuthenticatedUser; })
+            match x.Content with
+            | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
+            | _ -> Assert.Fail()
 
         [<Test>]
         member this.``should be able to get a specified user's repositories``() =
-            let repositoryResponse = getUserRepositoriesResponse (fun p -> { p with Owner = SpecifiedUser("saxonmatt"); })
-            match repositoryResponse.Content with
-            | Some(x) -> Assert.GreaterOrEqual(x.Length, 1)
-            | None -> Assert.Fail()
+            let x = getUserRepositoriesResponse (fun p -> { p with Owner = SpecifiedUser("saxonmatt"); })
+            match x.Content with
+            | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
+            | _ -> Assert.Fail()
 
         [<Test>]
         member this.``should be able to get a list of organization's repositories``() =
-            let repositoryResponse = getUserRepositoriesResponse (fun p -> { p with Owner = Organization("fsharp"); })
-            match repositoryResponse.Content with
-            | Some(x) -> Assert.GreaterOrEqual(x.Length, 1)
-            | None -> Assert.Fail()
+            let x = getUserRepositoriesResponse (fun p -> { p with Owner = Organization("fsharp"); })
+            match x.Content with
+            | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
+            | _ -> Assert.Fail()

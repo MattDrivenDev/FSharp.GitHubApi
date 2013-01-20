@@ -7,20 +7,22 @@
     [<Category("FirstPass")>]
     type ``Rate limiting``() =
 
+        let ``assert rate limit response is as expected`` i x =
+            match x.Content with
+                | Content(y) ->
+                    Assert.AreEqual(i, y.Rate.Limit)
+                    Assert.LessOrEqual(y.Rate.Remaining, i)
+                | Error(y) -> 
+                    printfn "%s" y.Message
+                    Assert.Fail()
+                | _ -> Assert.Fail()
+
         [<Test>]
         member this.``should have a limit of 60 for anonymous users``() =
-            let rateLimit = 
-                TestHelper.AnonymousUser
-                |> TestHelper.DefaultState 
-                |> GitHub.GetRateLimit
-            Assert.AreEqual(60, rateLimit.Content.Limit)
-            Assert.LessOrEqual(rateLimit.Content.Remaining, 60)
+            let x = TestHelper.AnonymousUser |> TestHelper.DefaultState |> GitHub.GetRateLimit
+            x |> ``assert rate limit response is as expected`` 60
 
         [<Test>]
         member this.``should have a limit of 5000 for authenticated users``() =
-            let rateLimit = 
-                TestHelper.AuthenticatedUser
-                |> TestHelper.DefaultState
-                |> GitHub.GetRateLimit
-            Assert.AreEqual(5000, rateLimit.Content.Limit)
-            Assert.LessOrEqual(rateLimit.Content.Remaining, 5000)
+            let x = TestHelper.AuthenticatedUser |> TestHelper.DefaultState |> GitHub.GetRateLimit
+            x |> ``assert rate limit response is as expected`` 5000

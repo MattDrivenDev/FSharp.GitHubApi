@@ -16,17 +16,27 @@
     // --------------------- //
     // Internal data types   //
     // --------------------- //
-    type internal Request = {
-        Resource: string
-    }
+    type internal RestMethod = 
+        | GET
+        | POST
+        | PATCH
+        | DELETE
 
-    type internal Response = 
-        | Success of string
-        | Failed of string
+    type internal Request = {
+        RestResource: string
+        Method: RestMethod
+        Content: string
+    }
 
     // -------------------- //
     // Internal functions   //
     // -------------------- //
+    let internal request = {
+        RestResource = ""
+        Method = GET
+        Content = ""
+    }
+
     let internal GitHubApiClient state = 
         let mutable client = new RestClient("https://api.github.com")
         match state.Credentials with
@@ -36,21 +46,25 @@
         | _ -> printfn "Anonymous connection"
         client
 
-    let internal handleRestResponse (r:IRestResponse) = 
-        match r.ResponseStatus with
-        | Completed -> Success(r.Content)
-        | Error -> Failed((sprintf "Error: '%s'" r.ErrorMessage))
-        | Aborted -> Failed("Aborted")
-        | TimedOut -> Failed("Timeout")
-
     let internal Get request state = 
         let client = state |> GitHubApiClient
-        let get = new RestRequest(resource=request.Resource)
-        client.Execute(request=get) |> handleRestResponse
+        let get = new RestRequest(resource=request.RestResource)
+        client.Execute(request=get)
 
     let internal Patch request state json =
         let client = state |> GitHubApiClient
-        let mutable patch = new RestRequest(request.Resource, Method.PATCH)
+        let mutable patch = new RestRequest(request.RestResource, Method.PATCH)
         patch.RequestFormat <- DataFormat.Json
         patch.AddParameter(@"application\json", json, ParameterType.RequestBody) |> ignore        
-        client.Execute(request=patch) |> handleRestResponse
+        client.Execute(request=patch)
+
+    type internal RestClient() =
+        member this.Bind(x) = x
+        member this.Delay(f) = f()
+        member this.Return((x:Request->Request),s) = 
+            let r = request |> x 
+            match r.Method with
+            | PATCH -> Patch r s r.Content
+            | _ -> Get r s
+                
+    let internal restfulResponse = new RestClient()

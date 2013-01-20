@@ -6,7 +6,7 @@
     // Api Basics           //
     // -------------------- //
     let GetRateLimit = 
-        ApiHelper.RateLimit
+        RateLimiting.Check
 
     // -------------------- //
     // Users Api            //

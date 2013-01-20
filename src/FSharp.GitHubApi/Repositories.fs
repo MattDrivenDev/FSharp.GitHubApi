@@ -1,8 +1,9 @@
 ﻿module FSharp.GitHubApi.Repositories
 
     open System
-    open FSharp.GitHubApi.ApiHelper
     open Newtonsoft.Json
+    open RestHelper
+    open JsonHelper
 
     // -------------------- //
     // Public data types    //
@@ -107,14 +108,9 @@
             | Organization(x) -> sprintf "orgs/%s/repos" x
         sprintf "%s?type=%A&sort=%A&direction=%A" resource p.Type p.Sort p.Direction
 
-    let internal List (p:ListParams->ListParams) state =         
-        let resource = p(defaultListParams) |> buildRequestResource
-        let repositoriesResponse = 
-            RestHelper.Get { Resource = resource } state
-        match repositoriesResponse with
-        | RestHelper.Success(json) ->
-            let repositoryCollection = json |> JsonHelper.DeserializeJson<Repository array>
-            match repositoryCollection with
-            | Some(c) -> { StatusCode = 200; Content = repositoryCollection; ErrorMessage = "" }
-            | None -> { StatusCode = 200; Content = None; ErrorMessage = "Cannot deserialize Repositories list, return api defauled instead" }
-        | RestHelper.Failed(reason) -> { StatusCode = 0; Content = None; ErrorMessage = reason }
+    let internal List (p:ListParams->ListParams) state = 
+        let request = (fun x -> { x with RestResource = (buildRequestResource (p(defaultListParams))) })
+        let resolve x = 
+            deserialize { return typeof<Repository array>,
+            ConvertResponse<Repository array>(restfulResponse { return x, state}) }
+        resolve request

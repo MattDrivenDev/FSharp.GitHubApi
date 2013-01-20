@@ -2,66 +2,74 @@
 
     open NUnit.Framework
     open FSharp.GitHubApi
-    open FSharp.GitHubApi.Users
 
     [<TestFixture>]
     [<Category("FirstPass")>]
     type Users() =
             
-        let getUserResponse p = 
-            TestHelper.AuthenticatedUser
-            |> TestHelper.DefaultState
-            |> GitHub.GetUser p
+        let ``assert user details are as expected`` u n p x =
+            match x.Content with
+            | Content(y) ->
+                Assert.IsTrue(y.Login.Equals(u))
+                Assert.IsTrue(y.Name.Equals(n))
+                Assert.IsTrue(y.Plan.Name.Equals(p))
+            | _ -> Assert.Fail()
+
+        let ``assert name has changed`` n (x:GitHubResponse<UserDetails>) = 
+            match x.Content with
+            | Content(y) ->
+                Assert.IsTrue(y.Name.Equals(n)) 
+            | _ -> Assert.Fail()
+
+        let ``assert that there is a collection of users`` (x:GitHubResponse<UserSummary array>) =
+            match x.Content with
+            | Content(ys) ->
+                Assert.GreaterOrEqual(ys.Length, 1)                
+            | _ -> Assert.Fail()
 
         let updateUserResponse p = 
             TestHelper.AuthenticatedUser
             |> TestHelper.DefaultState
             |> GitHub.UpdateUser p          
 
-        let getAllUsersResponse sinceId =
-            TestHelper.AuthenticatedUser
-            |> TestHelper.DefaultState
-            |> GitHub.GetAllUsers sinceId
-
         let getUserId username = 
-            let userResponse = getUserResponse (SpecificUser(username))
-            userResponse.Content.Value.Id
+            let x = 
+                TestHelper.AuthenticatedUser 
+                |> TestHelper.DefaultState 
+                |> GitHub.GetUser (SpecificUser("saxonmatt"))
+            match x.Content with
+            | Content(y) -> y.Id
+            | _ -> 0
+
 
         [<Test>]
         member this.``should be able to get a specified user``() =
-            let userResponse = getUserResponse (SpecificUser("saxonmatt"))
-            match userResponse.Content with
-            | Some(user) ->
-                Assert.IsTrue(user.Login.Equals("saxonmatt"))
-                Assert.IsTrue(user.Name.Equals("Matt Ball"))
-                Assert.IsTrue(user.Blog.Contains("www.saxonmatt.co.uk"))
-            | None -> Assert.Fail()
+            let x = 
+                TestHelper.AuthenticatedUser 
+                |> TestHelper.DefaultState 
+                |> GitHub.GetUser (SpecificUser("saxonmatt"))
+            x |> ``assert user details are as expected`` "saxonmatt" "Matt Ball" "free"
 
         [<Test>]
-        member this.``should be able to get current authenticated user``() =            
-            let userResponse = getUserResponse AuthenticatedUser
-            match userResponse.Content with
-            | Some(user) ->
-                Assert.IsTrue(user.Login.Equals(TestSettings.GitHubUsername))
-                Assert.IsTrue(user.Name.Equals(TestSettings.GitHubName))
-                Assert.IsTrue(user.Plan.Name.Equals(TestSettings.GitHubPlan))  
-            | None -> Assert.Fail()       
+        member this.``should be able to get current authenticated user``() =    
+            let x = 
+                TestHelper.AuthenticatedUser 
+                |> TestHelper.DefaultState 
+                |> GitHub.GetUser AuthenticatedUser
+            x |> ``assert user details are as expected`` TestSettings.GitHubUsername TestSettings.GitHubName TestSettings.GitHubPlan     
 
         [<Test>]
-        member this.``should be able to update the current authenticated user``() =
+        member this.``should be able to update the current authenticated user``() =            
             let newName = sprintf "edited-%s" TestSettings.GitHubName
-            let updateResponse = updateUserResponse (fun x -> { x with Name = newName })
-            match updateResponse.Content with
-            | Some(user) -> 
-                Assert.IsTrue(user.Name.Equals(newName))
-                updateUserResponse (fun x -> { x with Name = TestSettings.GitHubName }) |> ignore
-            | None -> Assert.Fail()
+            let x = updateUserResponse (fun x -> { x with Name = newName })
+            x |> ``assert name has changed`` newName             
+            updateUserResponse (fun x -> { x with Name = TestSettings.GitHubName }) |> ignore
 
         [<Test>]
         member this.``should be able to get a collection of all users``() = 
-            let id = "saxonmatt" |> getUserId 
-            let usersResponse = getAllUsersResponse id
-            match usersResponse.Content with
-            | Some(c) ->
-                 Assert.GreaterOrEqual(c.Length, 1)
-            | None -> Assert.Fail()
+            let since = getUserId "saxonmatt"
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.GetAllUsers since
+            x |> ``assert that there is a collection of users``
