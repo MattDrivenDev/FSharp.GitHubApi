@@ -17,6 +17,7 @@ The Api current supports the following:
 * [List an organization's repositories](http://developer.github.com/v3/repos/#list-organization-repositories)
 * [Create a new user repository](http://developer.github.com/v3/repos/#create)
 * [Delete an existing repository](http://developer.github.com/v3/repos/#delete-a-repository)
+* [List branches on a specified repository](http://developer.github.com/v3/repos/#list-branches)
 
 ##Notes##
 
