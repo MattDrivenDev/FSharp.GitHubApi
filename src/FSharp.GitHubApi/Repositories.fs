@@ -70,6 +70,20 @@
         OpenIssues : int
     }
 
+    type Commit = {
+        [<JsonProperty(PropertyName="sha")>]
+        Sha : string
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+    }
+
+    type BranchSummary = {
+        [<JsonProperty(PropertyName="name")>]
+        Name : string
+        [<JsonProperty(PropertyName="commit")>]
+        Commit : Commit
+    }
+
     type UserOrOrganization = 
         | AuthenticatedUser
         | SpecifiedUser of string
@@ -179,4 +193,12 @@
         let resolve x = 
             RestfulResponse x state
             |> ConvertResponse<Repository>
+        resolve request
+
+    let internal ListBranches owner repo state = 
+        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s/branches" owner repo) })
+        let resolve x =
+            RestfulResponse x state
+            |> ConvertResponse<BranchSummary array>
+            |> DeserializeResponseContent<BranchSummary array>
         resolve request

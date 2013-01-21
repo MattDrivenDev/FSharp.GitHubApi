@@ -31,3 +31,6 @@
 
     let DeleteRepository = 
         Repositories.Delete
+
+    let ListBranches = 
+        Repositories.ListBranches
