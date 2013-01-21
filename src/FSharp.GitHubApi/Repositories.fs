@@ -158,22 +158,25 @@
         sprintf "repos/%s/%s" p.Owner p.RepoName
 
     let internal List (p:ListParams->ListParams) state = 
-        let request = (fun x -> { x with RestResource = (buildListResource (p(defaultListParams))) })
+        let request = (fun x -> { x with RestResource = (buildListResource (p(defaultListParams))) })       
         let resolve x = 
-            deserialize { return typeof<Repository array>,
-            ConvertResponse<Repository array>(restfulResponse { return x, state}) }
+            RestfulResponse x state
+            |> ConvertResponse<Repository array>
+            |> DeserializeResponseContent<Repository array>
         resolve request
 
     let internal Create (p:CreateParams->CreateParams) state =         
-        let json = serialize { return (p(defaultCreateParams)) }
+        let json = SerializeToJson (p(defaultCreateParams))
         let request = (fun x -> { x with RestResource = "user/repos"; Method = POST; Content = json; })
         let resolve x = 
-            deserialize { return typeof<Repository>,
-            ConvertResponse<Repository>(restfulResponse { return x, state}) }
+            RestfulResponse x state
+            |> ConvertResponse<Repository>
+            |> DeserializeResponseContent<Repository>
         resolve request
 
     let internal Delete (p:DeleteParams->DeleteParams) state = 
         let request = (fun x -> { x with RestResource = (buildDeleteResource (p(defaultDeleteParams))); Method = DELETE; })
         let resolve x = 
-            ConvertResponse<Repository>(restfulResponse { return x, state})
+            RestfulResponse x state
+            |> ConvertResponse<Repository>
         resolve request

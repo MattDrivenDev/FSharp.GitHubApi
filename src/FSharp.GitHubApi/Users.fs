@@ -119,16 +119,18 @@
 
     let internal getCurrent state = 
         let request = (fun x -> { x with RestResource = "user"})
-        let resolve x =
-            deserialize { return typeof<UserDetails>,
-            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        let resolve x = 
+            RestfulResponse x state
+            |> ConvertResponse<UserDetails>
+            |> DeserializeResponseContent<UserDetails>
         resolve request            
 
     let internal getSpecified username state =
         let request = (fun x -> { x with RestResource = (sprintf "users/%s" username)})
-        let resolve x =
-            deserialize { return typeof<UserDetails>,
-            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        let resolve x = 
+            RestfulResponse x state
+            |> ConvertResponse<UserDetails>
+            |> DeserializeResponseContent<UserDetails>
         resolve request
 
     let internal Get p state = 
@@ -137,16 +139,18 @@
         | SpecificUser(x) -> getSpecified x state
             
     let internal Update (p:UpdateParams->UpdateParams) state = 
-        let json = serialize { return p(defaultUpdateParams) }
+        let json = SerializeToJson (p(defaultUpdateParams))
         let request = (fun x -> { x with Method = PATCH; RestResource = "user"; Content = json })
-        let resolve x =
-            deserialize { return typeof<UserDetails>,
-            ConvertResponse<UserDetails>(restfulResponse { return x, state}) }
+        let resolve x = 
+            RestfulResponse x state
+            |> ConvertResponse<UserDetails>
+            |> DeserializeResponseContent<UserDetails>
         resolve request
 
     let internal GetAll since state = 
         let request = (fun x -> { x with RestResource = (sprintf "users?since=%i" since) })
         let resolve x = 
-            deserialize { return typeof<UserSummary array>,
-            ConvertResponse<UserSummary array>(restfulResponse { return x, state}) }
+            RestfulResponse x state
+            |> ConvertResponse<UserSummary array>
+            |> DeserializeResponseContent<UserSummary array>
         resolve request

@@ -26,6 +26,7 @@ module FSharp.GitHubApi.RateLimiting
     let internal Check state = 
         let request = (fun x -> { x with RestResource = "rate_limit" })
         let resolve x = 
-            deserialize { return typeof<RateLimit>, 
-            ConvertResponse<RateLimit>(restfulResponse { return x, state }) }
+            RestfulResponse x state
+            |> ConvertResponse<RateLimit>
+            |> DeserializeResponseContent<RateLimit>
         resolve request
