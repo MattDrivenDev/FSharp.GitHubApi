@@ -70,15 +70,10 @@
         let delete = new RestRequest(request.RestResource, Method.DELETE)
         client.Execute(request=delete)
 
-    type internal RestClient() =
-        member this.Bind(x) = x
-        member this.Delay(f) = f()
-        member this.Return((x:Request->Request),s) = 
-            let r = request |> x 
-            match r.Method with
-            | PATCH -> Patch r s r.Content
-            | POST -> Post r s r.Content
-            | DELETE -> Delete r s
-            | _ -> Get r s
-                
-    let internal restfulResponse = new RestClient()
+    let internal RestfulResponse (x:Request->Request) s = 
+        let r = x(request)
+        match r.Method with
+        | PATCH -> Patch r s r.Content
+        | POST -> Post r s r.Content
+        | DELETE -> Delete r s
+        | _ -> Get r s

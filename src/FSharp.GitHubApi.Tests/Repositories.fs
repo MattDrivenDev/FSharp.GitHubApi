@@ -51,3 +51,13 @@
                 | HttpStatusCode.NoContent -> Assert.Pass()
                 | _ -> Assert.Fail()
             | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to get a list of branches from a repository``() =
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.ListBranches "saxonmatt" "FSharp.GitHubApi"
+            match x.Content with
+            | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
+            | _ -> Assert.Fail()
