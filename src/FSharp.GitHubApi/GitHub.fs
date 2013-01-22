@@ -31,6 +31,9 @@
 
     let CreateRepository = 
         Repositories.Create
+        
+    let EditRepository = 
+        Repositories.Edit
 
     let DeleteRepository = 
         Repositories.Delete
