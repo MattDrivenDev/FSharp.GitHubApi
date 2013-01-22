@@ -73,3 +73,23 @@
                 Assert.IsTrue(y.Owner.Login.Equals("saxonmatt"))
                 Assert.IsTrue(y.Name.Equals("FSharp.GitHubApi"))
             | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to update a repository``() =
+            let state = TestHelper.AuthenticatedUser |> TestHelper.DefaultState
+            let repoName = sprintf "%s.%s" TestSettings.TestRepoName (System.DateTime.Now.ToString("ddHHmmss"))
+            let editedRepoName = sprintf "edited-%s" repoName
+            let createTestRepo = GitHub.CreateRepository (fun p -> { p with RepoName = repoName })
+            let deleteTestRepo = GitHub.DeleteRepository (fun p -> { p with Owner = TestSettings.GitHubUsername; RepoName = editedRepoName ;})
+
+            createTestRepo state |> ignore
+            let x = 
+                state 
+                |> GitHub.EditRepository TestSettings.GitHubUsername repoName (fun p -> { p with EditParams.RepoName = editedRepoName })
+            match x.Content with
+            | Content(y) ->
+                Assert.IsTrue(y.Name.Equals(editedRepoName))
+                deleteTestRepo state |> ignore
+            | _ ->                     
+                deleteTestRepo state |> ignore
+                Assert.Fail()
