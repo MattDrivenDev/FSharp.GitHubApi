@@ -61,3 +61,15 @@
             match x.Content with
             | Content(y) -> Assert.GreaterOrEqual(y.Length, 1)
             | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to get full repository details``() =
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.GetRepository "saxonmatt" "FSharp.GitHubApi"
+            match x.Content with
+            | Content(y) ->
+                Assert.IsTrue(y.Owner.Login.Equals("saxonmatt"))
+                Assert.IsTrue(y.Name.Equals("FSharp.GitHubApi"))
+            | _ -> Assert.Fail()
