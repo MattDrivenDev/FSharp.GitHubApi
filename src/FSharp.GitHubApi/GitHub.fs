@@ -25,6 +25,9 @@
     // -------------------- //
     let ListRepositories = 
         Repositories.List
+        
+    let GetRepository = 
+        Repositories.Get
 
     let CreateRepository = 
         Repositories.Create
