@@ -21,6 +21,21 @@
         Url : string
     }
 
+    type Organization = {
+        [<JsonProperty(PropertyName="login")>]
+        Login : string
+        [<JsonProperty(PropertyName="id")>]
+        Id : int
+        [<JsonProperty(PropertyName="avatar_url")>]
+        AvatarUrl : string
+        [<JsonProperty(PropertyName="gravatar_id")>]
+        GravatarId : string
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+        [<JsonProperty(PropertyName="type")>]
+        Type : string
+    }
+
     type Repository = {
         [<JsonProperty(PropertyName="id")>]
         Id : int        
@@ -68,6 +83,18 @@
         MasterBranch : string
         [<JsonProperty(PropertyName="open_issues")>]
         OpenIssues : int
+        [<JsonProperty(PropertyName="organization")>]
+        Organization : Organization
+        [<JsonProperty(PropertyName="parent")>]
+        Parent : Repository
+        [<JsonProperty(PropertyName="source")>]
+        Source : Repository
+        [<JsonProperty(PropertyName="has_issues")>]
+        HasIssues : bool
+        [<JsonProperty(PropertyName="has_wiki")>]
+        HasWiki : bool
+        [<JsonProperty(PropertyName="has_downloads")>]
+        HasDownloads : bool
     }
 
     type Commit = {
@@ -201,4 +228,12 @@
             RestfulResponse x state
             |> ConvertResponse<BranchSummary array>
             |> DeserializeResponseContent<BranchSummary array>
+        resolve request
+
+    let internal Get owner repo state = 
+        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s" owner repo) })
+        let resolve x =
+            RestfulResponse x state
+            |> ConvertResponse<Repository>
+            |> DeserializeResponseContent<Repository>
         resolve request

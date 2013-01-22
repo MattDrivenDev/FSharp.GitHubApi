@@ -18,6 +18,7 @@ The Api current supports the following:
 * [Create a new user repository](http://developer.github.com/v3/repos/#create)
 * [Delete an existing repository](http://developer.github.com/v3/repos/#delete-a-repository)
 * [List branches on a specified repository](http://developer.github.com/v3/repos/#list-branches)
+* [Get a specified repository](http://developer.github.com/v3/repos/#get)
 
 ##Notes##
 
