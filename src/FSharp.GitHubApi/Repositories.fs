@@ -154,6 +154,23 @@
         GitIgnoreTemplate : string
     }
 
+    type EditParams = {
+        [<JsonProperty(PropertyName="name")>]
+        RepoName : string
+        [<JsonProperty(PropertyName="description")>]
+        Description : string
+        [<JsonProperty(PropertyName="homepage")>]
+        Homepage : string
+        [<JsonProperty(PropertyName="private")>]
+        Private : bool
+        [<JsonProperty(PropertyName="has_issues")>]
+        HasIssues : bool
+        [<JsonProperty(PropertyName="has_wiki")>]
+        HasWiki : bool
+        [<JsonProperty(PropertyName="has_downloads")>]
+        HasDownloads : bool
+    }
+
     type DeleteParams = {
         RepoName : string
         Owner : string
@@ -180,6 +197,16 @@
         TeamId = 0
         AutoInit = false
         GitIgnoreTemplate = null
+    }
+
+    let internal defaultEditParams = {
+        EditParams.RepoName = null
+        Description = null
+        Homepage = null
+        Private = false
+        HasIssues = true
+        HasWiki = true
+        HasDownloads = true
     }
 
     let internal defaultDeleteParams = {
@@ -209,6 +236,15 @@
     let internal Create (p:CreateParams->CreateParams) state =         
         let json = SerializeToJson (p(defaultCreateParams))
         let request = (fun x -> { x with RestResource = "user/repos"; Method = POST; Content = json; })
+        let resolve x = 
+            RestfulResponse x state
+            |> ConvertResponse<Repository>
+            |> DeserializeResponseContent<Repository>
+        resolve request
+
+    let internal Edit owner repo (p:EditParams->EditParams) state =         
+        let json = SerializeToJson (p(defaultEditParams))
+        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s" owner repo); Method = PATCH; Content = json; })
         let resolve x = 
             RestfulResponse x state
             |> ConvertResponse<Repository>
