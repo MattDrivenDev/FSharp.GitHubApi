@@ -93,3 +93,14 @@
             | _ ->                     
                 deleteTestRepo state |> ignore
                 Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to list repository contributors``() =
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.ListContributors "fsharp" "FAKE" false
+            match x.Content with
+            | Content(ys) ->
+                Assert.GreaterOrEqual(ys.Length, 1)
+            | _ -> Assert.Fail()
