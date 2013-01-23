@@ -21,6 +21,21 @@
         Url : string
     }
 
+    type Contributor = {
+        [<JsonProperty(PropertyName="login")>]
+        Login : string
+        [<JsonProperty(PropertyName="id")>]
+        Id : int
+        [<JsonProperty(PropertyName="avatar_url")>]
+        AvatarUrl : string
+        [<JsonProperty(PropertyName="gravatar_id")>]
+        GravatarId : string
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+        [<JsonProperty(PropertyName="contributions")>]
+        Contributions : int
+    }
+
     type Organization = {
         [<JsonProperty(PropertyName="login")>]
         Login : string
@@ -272,4 +287,13 @@
             RestfulResponse x state
             |> ConvertResponse<Repository>
             |> DeserializeResponseContent<Repository>
+        resolve request
+
+    let internal ListContributors owner repo anon state = 
+        let isAnon = if anon then "?anon=1" else ""
+        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s/contributors%s" owner repo isAnon) })
+        let resolve x =
+            RestfulResponse x state
+            |> ConvertResponse<Contributor array>
+            |> DeserializeResponseContent<Contributor array>
         resolve request

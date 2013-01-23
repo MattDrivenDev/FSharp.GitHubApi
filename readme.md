@@ -20,6 +20,7 @@ The Api current supports the following:
 * [List branches on a specified repository](http://developer.github.com/v3/repos/#list-branches)
 * [Get a specified repository](http://developer.github.com/v3/repos/#get)
 * [Edit a specified repository](http://developer.github.com/v3/repos/#edit)
+* [List Contributors to a specified repository](http://developer.github.com/v3/repos/#list-contributors)
 
 ##Notes##
 
