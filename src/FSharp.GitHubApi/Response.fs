@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module FSharp.GitHubApi.ApiHelper
+module FSharp.GitHubApi.Response
 
     open System.Net
     open Newtonsoft.Json
@@ -30,6 +30,7 @@ module FSharp.GitHubApi.ApiHelper
         | ErrorResponse of string
         | Timeout
         | Aborted
+        | NoResponse
 
     type ResponseContent<'T> = 
         | Content of 'T
@@ -39,18 +40,18 @@ module FSharp.GitHubApi.ApiHelper
     type GitHubResponse<'T> = {
         StatusCode          : HttpStatusCode
         StatusDescription   : string
-        ResponseStatus      : ResponseStatus option       
+        ResponseStatus      : ResponseStatus       
         ContentRaw          : string
         Content             : ResponseContent<'T> }
 
     let ConvertResponse<'T> (r:IRestResponse) = 
         let map = 
             match r.ResponseStatus with 
-            | RestSharp.ResponseStatus.Completed -> Some(Completed)
-            | RestSharp.ResponseStatus.TimedOut -> Some(Timeout)
-            | RestSharp.ResponseStatus.Aborted -> Some(Aborted)
-            | RestSharp.ResponseStatus.Error -> Some(ErrorResponse(r.ErrorMessage))
-            | RestSharp.ResponseStatus.None -> None
+            | RestSharp.ResponseStatus.Completed -> Completed
+            | RestSharp.ResponseStatus.TimedOut -> Timeout
+            | RestSharp.ResponseStatus.Aborted -> Aborted
+            | RestSharp.ResponseStatus.Error -> ErrorResponse(r.ErrorMessage)
+            | RestSharp.ResponseStatus.None -> NoResponse
         { StatusCode          = r.StatusCode
           StatusDescription   = r.StatusDescription
           ResponseStatus      = map

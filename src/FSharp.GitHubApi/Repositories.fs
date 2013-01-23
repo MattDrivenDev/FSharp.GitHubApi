@@ -2,8 +2,9 @@
 
     open System
     open Newtonsoft.Json
-    open RestHelper
-    open JsonHelper
+    open Helpers
+    open RestFSharp
+    open Json
 
     // -------------------- //
     // Public data types    //
@@ -241,59 +242,32 @@
         sprintf "repos/%s/%s" p.Owner p.RepoName
 
     let internal List (p:ListParams->ListParams) state = 
-        let request = (fun x -> { x with RestResource = (buildListResource (p(defaultListParams))) })       
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<Repository array>
-            |> DeserializeResponseContent<Repository array>
-        resolve request
+        state |> GetDeserializedGitHubResponse<Repository array> (fun x -> 
+            { x with RestResource = (buildListResource (p(defaultListParams))) })        
 
     let internal Create (p:CreateParams->CreateParams) state =         
         let json = SerializeToJson (p(defaultCreateParams))
-        let request = (fun x -> { x with RestResource = "user/repos"; Method = POST; Content = json; })
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<Repository>
-            |> DeserializeResponseContent<Repository>
-        resolve request
-
+        state |> GetDeserializedGitHubResponse<Repository> (fun x -> 
+            { x with RestResource = "user/repos"; Method = POST; Content = json; })
+        
     let internal Edit owner repo (p:EditParams->EditParams) state =         
         let json = SerializeToJson (p(defaultEditParams))
-        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s" owner repo); Method = PATCH; Content = json; })
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<Repository>
-            |> DeserializeResponseContent<Repository>
-        resolve request
-
+        state |> GetDeserializedGitHubResponse<Repository> (fun x -> 
+            { x with RestResource = (sprintf "repos/%s/%s" owner repo); Method = PATCH; Content = json; })
+        
     let internal Delete (p:DeleteParams->DeleteParams) state = 
-        let request = (fun x -> { x with RestResource = (buildDeleteResource (p(defaultDeleteParams))); Method = DELETE; })
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<Repository>
-        resolve request
-
-    let internal ListBranches owner repo state = 
-        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s/branches" owner repo) })
-        let resolve x =
-            RestfulResponse x state
-            |> ConvertResponse<BranchSummary array>
-            |> DeserializeResponseContent<BranchSummary array>
-        resolve request
+        state |> GetGitHubResponse<Repository> (fun x -> 
+            { x with RestResource = (buildDeleteResource (p(defaultDeleteParams))); Method = DELETE; })
+        
+    let internal ListBranches owner repo state =         
+        state |> GetDeserializedGitHubResponse<BranchSummary array> (fun x -> 
+            { x with RestResource = (sprintf "repos/%s/%s/branches" owner repo) })
 
     let internal Get owner repo state = 
-        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s" owner repo) })
-        let resolve x =
-            RestfulResponse x state
-            |> ConvertResponse<Repository>
-            |> DeserializeResponseContent<Repository>
-        resolve request
+        state |> GetDeserializedGitHubResponse<Repository> (fun x -> 
+            { x with RestResource = (sprintf "repos/%s/%s" owner repo) })        
 
     let internal ListContributors owner repo anon state = 
         let isAnon = if anon then "?anon=1" else ""
-        let request = (fun x -> { x with RestResource = (sprintf "repos/%s/%s/contributors%s" owner repo isAnon) })
-        let resolve x =
-            RestfulResponse x state
-            |> ConvertResponse<Contributor array>
-            |> DeserializeResponseContent<Contributor array>
-        resolve request
+        state |> GetDeserializedGitHubResponse<Contributor array> (fun x -> 
+            { x with RestResource = (sprintf "repos/%s/%s/contributors%s" owner repo isAnon) })

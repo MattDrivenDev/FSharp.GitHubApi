@@ -1,4 +1,4 @@
-﻿module FSharp.GitHubApi.RestHelper
+﻿module FSharp.GitHubApi.RestFSharp
 
     open RestSharp
 
