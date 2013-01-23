@@ -1,7 +1,7 @@
 ﻿module TestHelper
 
     open FSharp.GitHubApi
-    open FSharp.GitHubApi.RestHelper
+    open FSharp.GitHubApi.RestFSharp
 
     type User = {
         Username: string option
