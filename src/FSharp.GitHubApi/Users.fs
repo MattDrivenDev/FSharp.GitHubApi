@@ -2,8 +2,9 @@
 
     open System
     open Newtonsoft.Json
-    open RestHelper
-    open JsonHelper
+    open RestFSharp
+    open Json
+    open Helpers
 
     // -------------------- //
     // Public data types    //
@@ -118,20 +119,12 @@
     }
 
     let internal getCurrent state = 
-        let request = (fun x -> { x with RestResource = "user"})
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<UserDetails>
-            |> DeserializeResponseContent<UserDetails>
-        resolve request            
+        state |> GetDeserializedGitHubResponse<UserDetails> (fun x -> 
+            { x with RestResource = "user"})
 
     let internal getSpecified username state =
-        let request = (fun x -> { x with RestResource = (sprintf "users/%s" username)})
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<UserDetails>
-            |> DeserializeResponseContent<UserDetails>
-        resolve request
+        state |> GetDeserializedGitHubResponse<UserDetails> (fun x -> 
+            { x with RestResource = (sprintf "users/%s" username)})
 
     let internal Get p state = 
         match p with
@@ -140,17 +133,9 @@
             
     let internal Update (p:UpdateParams->UpdateParams) state = 
         let json = SerializeToJson (p(defaultUpdateParams))
-        let request = (fun x -> { x with Method = PATCH; RestResource = "user"; Content = json })
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<UserDetails>
-            |> DeserializeResponseContent<UserDetails>
-        resolve request
-
+        state |> GetDeserializedGitHubResponse<UserDetails> (fun x -> 
+            { x with Method = PATCH; RestResource = "user"; Content = json })
+        
     let internal GetAll since state = 
-        let request = (fun x -> { x with RestResource = (sprintf "users?since=%i" since) })
-        let resolve x = 
-            RestfulResponse x state
-            |> ConvertResponse<UserSummary array>
-            |> DeserializeResponseContent<UserSummary array>
-        resolve request
+        state |> GetDeserializedGitHubResponse<UserSummary array> (fun x -> 
+            { x with RestResource = (sprintf "users?since=%i" since) })        
