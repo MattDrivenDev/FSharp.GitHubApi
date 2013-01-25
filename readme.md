@@ -21,6 +21,7 @@ The Api current supports the following:
 * [Get a specified repository](http://developer.github.com/v3/repos/#get)
 * [Edit a specified repository](http://developer.github.com/v3/repos/#edit)
 * [List Contributors to a specified repository](http://developer.github.com/v3/repos/#list-contributors)
+* [Get a specified branch from a repository](http://developer.github.com/v3/repos/#get-branch)
 
 ##Notes##
 

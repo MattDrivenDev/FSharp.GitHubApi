@@ -120,11 +120,62 @@
         Url : string
     }
 
+    type GitLogEntry = {
+        [<JsonProperty(PropertyName="name")>]
+        Name : string
+        [<JsonProperty(PropertyName="email")>]
+        Email : string
+    }
+
+    type GitCommit = {
+        [<JsonProperty(PropertyName="author")>]
+        Author : GitLogEntry
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+        [<JsonProperty(PropertyName="message")>]
+        Message : string
+        [<JsonProperty(PropertyName="tree")>]
+        Tree : Commit
+        [<JsonProperty(PropertyName="committer")>]
+        Committer : GitLogEntry
+    }
+
+    type CommitDetails = {
+        [<JsonProperty(PropertyName="sha")>]
+        Sha : string
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+        [<JsonProperty(PropertyName="author")>]
+        Author : Owner
+        [<JsonProperty(PropertyName="parents")>]
+        Parents : Commit array
+        [<JsonProperty(PropertyName="committer")>]
+        Committer : Owner
+        [<JsonProperty(PropertyName="commit")>]
+        Commit : GitCommit
+    }
+
+    type Links = {
+        [<JsonProperty(PropertyName="html")>]
+        Html : string
+        [<JsonProperty(PropertyName="self")>]
+        Self : string
+    }
+
     type BranchSummary = {
         [<JsonProperty(PropertyName="name")>]
         Name : string
         [<JsonProperty(PropertyName="commit")>]
         Commit : Commit
+    }
+
+    type BranchDetails = {
+        [<JsonProperty(PropertyName="name")>]
+        Name : string
+        [<JsonProperty(PropertyName="commit")>]
+        Commit : CommitDetails
+        [<JsonProperty(PropertyName="_links")>]
+        Links : Links
     }
 
     type UserOrOrganization = 
@@ -271,3 +322,7 @@
         let isAnon = if anon then "?anon=1" else ""
         state |> GetDeserializedGitHubResponse<Contributor array> (fun x -> 
             { x with RestResource = (sprintf "repos/%s/%s/contributors%s" owner repo isAnon) })
+
+    let internal GetBranch owner repo branch state = 
+        state |> GetDeserializedGitHubResponse<BranchDetails> (fun x -> 
+            { x with RestResource = (sprintf "repos/%s/%s/branches/%s" owner repo branch) })  
