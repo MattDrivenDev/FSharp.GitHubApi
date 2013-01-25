@@ -41,5 +41,8 @@
     let ListBranches = 
         Repositories.ListBranches
 
+    let GetBranch =
+        Repositories.GetBranch
+
     let ListContributors = 
         Repositories.ListContributors

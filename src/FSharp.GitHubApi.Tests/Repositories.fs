@@ -104,3 +104,14 @@
             | Content(ys) ->
                 Assert.GreaterOrEqual(ys.Length, 1)
             | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``shuold be able to get full branch details``() =
+            let x =
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.GetBranch "saxonmatt" "FSharp.GitHubApi" "master"
+            match x.Content with
+            | Content(y) ->
+                Assert.IsTrue(y.Name.Equals("master"))
+            | _ -> Assert.Fail()
