@@ -106,7 +106,7 @@
             | _ -> Assert.Fail()
 
         [<Test>]
-        member this.``shuold be able to get full branch details``() =
+        member this.``should be able to get full branch details``() =
             let x =
                 TestHelper.AuthenticatedUser
                 |> TestHelper.DefaultState
@@ -114,4 +114,15 @@
             match x.Content with
             | Content(y) ->
                 Assert.IsTrue(y.Name.Equals("master"))
+            | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to get a list of teams associated with a repository``() =
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.ListTeams "IWDev" "IWDev3-FSharp"
+            match x.Content with
+            | Content(ys) ->
+                Assert.GreaterOrEqual(ys.Length, 1)
             | _ -> Assert.Fail()
