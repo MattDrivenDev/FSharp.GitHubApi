@@ -187,6 +187,17 @@
         Id : int
     }
 
+    type Tag = {
+        [<JsonProperty(PropertyName="name")>]
+        Name : string
+        [<JsonProperty(PropertyName="commit")>]
+        Commi : Commit
+        [<JsonProperty(PropertyName="zipball_url")>]
+        ZipBallUrl : string
+        [<JsonProperty(PropertyName="tarball_url")>]
+        TarBallUrl : string
+    }
+
     type UserOrOrganization = 
         | AuthenticatedUser
         | SpecifiedUser of string
@@ -338,4 +349,8 @@
 
     let internal ListTeams owner repo state = 
         state |> GetDeserializedGitHubResponse<Team array> (fun x ->
-            { x with RestResource = (sprintf "repos/%s/%s/teams" owner repo) })
+            { x with RestResource = (sprintf "repos/%s/%s/teams" owner repo) }) 
+
+    let internal ListTags owner repo state = 
+        state |> GetDeserializedGitHubResponse<Tag array> (fun x ->
+            { x with RestResource = (sprintf "repos/%s/%s/tags" owner repo) })

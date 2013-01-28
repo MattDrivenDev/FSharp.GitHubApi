@@ -23,6 +23,7 @@ The Api current supports the following:
 * [List Contributors to a specified repository](http://developer.github.com/v3/repos/#list-contributors)
 * [Get a specified branch from a repository](http://developer.github.com/v3/repos/#get-branch)
 * [Get teams for a specified repository](http://developer.github.com/v3/repos/#list-teams)
+* [Get tags for a specified repository](http://developer.github.com/v3/repos/#list-tags)
 
 ##Notes##
 
