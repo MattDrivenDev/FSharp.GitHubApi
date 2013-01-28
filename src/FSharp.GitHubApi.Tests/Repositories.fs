@@ -126,3 +126,14 @@
             | Content(ys) ->
                 Assert.GreaterOrEqual(ys.Length, 1)
             | _ -> Assert.Fail()
+
+        [<Test>]
+        member this.``should be able to get a list of tags for a repository``() =
+            let x = 
+                TestHelper.AuthenticatedUser
+                |> TestHelper.DefaultState
+                |> GitHub.ListTags "fsharp" "FAKE"
+            match x.Content with
+            | Content(ys) ->
+                Assert.GreaterOrEqual(ys.Length, 1)
+            | _ -> Assert.Fail()
