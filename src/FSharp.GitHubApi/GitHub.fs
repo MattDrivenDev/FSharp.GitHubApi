@@ -46,3 +46,6 @@
 
     let ListContributors = 
         Repositories.ListContributors
+
+    let ListTeams =
+        Repositories.ListTeams
