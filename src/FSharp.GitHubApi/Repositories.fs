@@ -178,6 +178,15 @@
         Links : Links
     }
 
+    type Team = {
+        [<JsonProperty(PropertyName="name")>]
+        Name : string
+        [<JsonProperty(PropertyName="url")>]
+        Url : string
+        [<JsonProperty(PropertyName="id")>]
+        Id : int
+    }
+
     type UserOrOrganization = 
         | AuthenticatedUser
         | SpecifiedUser of string
@@ -326,3 +335,7 @@
     let internal GetBranch owner repo branch state = 
         state |> GetDeserializedGitHubResponse<BranchDetails> (fun x -> 
             { x with RestResource = (sprintf "repos/%s/%s/branches/%s" owner repo branch) })  
+
+    let internal ListTeams owner repo state = 
+        state |> GetDeserializedGitHubResponse<Team array> (fun x ->
+            { x with RestResource = (sprintf "repos/%s/%s/teams" owner repo) })
