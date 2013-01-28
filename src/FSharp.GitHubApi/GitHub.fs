@@ -49,3 +49,6 @@
 
     let ListTeams =
         Repositories.ListTeams
+
+    let ListTags =
+        Repositories.ListTags
