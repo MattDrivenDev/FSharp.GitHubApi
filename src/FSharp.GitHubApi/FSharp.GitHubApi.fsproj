@@ -55,12 +55,11 @@
     <Compile Include="RestSharp.fs" />
     <Compile Include="JsonHelper.fs" />
     <Compile Include="Helpers.fs" />
-    <Compile Include="RateLimiting.fs" />
+    <Compile Include="CommonTypes.fs" />
     <Compile Include="RateLimit.fs" />
-    <Compile Include="Users.fs" />
+    <Compile Include="User.fs" />
     <Compile Include="Repositories.fs" />
     <Compile Include="GitHub.fs" />
-    <Compile Include="GitHub2.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

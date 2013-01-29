@@ -2,7 +2,6 @@
 
     open NUnit.Framework
     open FSharp.GitHubApi
-    open FSharp.GitHubApi.RateLimit
 
     [<TestFixture>]
     [<Category("FirstPass")>]
@@ -20,10 +19,10 @@
 
         [<Test>]
         member this.``should have a limit of 60 for anonymous users``() =
-            let x = TestHelper.AnonymousUser |> TestHelper.DefaultState |> GitHub2.GetRateLimit
+            let x = TestHelper.AnonymousUser |> TestHelper.DefaultState |> GitHub.GetRateLimit
             x |> ``assert rate limit response is as expected`` 60
 
         [<Test>]
         member this.``should have a limit of 5000 for authenticated users``() =
-            let x = TestHelper.AuthenticatedUser |> TestHelper.DefaultState |> GitHub2.GetRateLimit
+            let x = TestHelper.AuthenticatedUser |> TestHelper.DefaultState |> GitHub.GetRateLimit
             x |> ``assert rate limit response is as expected`` 5000

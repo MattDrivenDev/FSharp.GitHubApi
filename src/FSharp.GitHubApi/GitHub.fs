@@ -6,19 +6,19 @@
     // Api Basics           //
     // -------------------- //
     let GetRateLimit = 
-        RateLimiting.Check
+        RateLimit.Check
 
     // -------------------- //
     // Users Api            //
     // -------------------- //
     let GetUser = 
-        Users.Get
+        User.Get
 
     let UpdateUser = 
-        Users.Update
+        User.Update
 
     let GetAllUsers = 
-        Users.GetAll
+        User.GetAll
 
     // -------------------- //
     // Repositories Api     //

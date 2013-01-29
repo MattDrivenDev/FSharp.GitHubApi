@@ -10,18 +10,18 @@
         let ``assert user details are as expected`` u n p x =
             match x.Content with
             | Content(y) ->
-                Assert.IsTrue(y.Login.Equals(u))
+                Assert.IsTrue(y.Identity.Login.Value.Equals(u))
                 Assert.IsTrue(y.Name.Equals(n))
                 Assert.IsTrue(y.Plan.Name.Equals(p))
             | _ -> Assert.Fail()
 
-        let ``assert name has changed`` n (x:GitHubResponse<UserDetails>) = 
+        let ``assert name has changed`` n (x:GitHubResponse<User.T>) = 
             match x.Content with
             | Content(y) ->
                 Assert.IsTrue(y.Name.Equals(n)) 
             | _ -> Assert.Fail()
 
-        let ``assert that there is a collection of users`` (x:GitHubResponse<UserSummary array>) =
+        let ``assert that there is a collection of users`` (x:GitHubResponse<UserIdentity array>) =
             match x.Content with
             | Content(ys) ->
                 Assert.GreaterOrEqual(ys.Length, 1)                
@@ -38,7 +38,7 @@
                 |> TestHelper.DefaultState 
                 |> GitHub.GetUser (SpecificUser("saxonmatt"))
             match x.Content with
-            | Content(y) -> y.Id
+            | Content(y) -> y.Identity.Id.Value
             | _ -> 0
 
 

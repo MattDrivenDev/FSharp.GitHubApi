@@ -1,4 +1,5 @@
-﻿module FSharp.GitHubApi.RateLimit
+﻿[<AutoOpen>]
+module FSharp.GitHubApi.RateLimit
 
     open System.IO
     open FSharp.Data
