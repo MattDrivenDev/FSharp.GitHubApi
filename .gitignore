@@ -13,4 +13,6 @@ build-output/
 *.suo
 *.DotSettings.user
 *.*proj.user
+*.userprefs
+*.bat.save
 build.log.xml
