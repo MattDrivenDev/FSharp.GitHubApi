@@ -5,12 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>c2ee8ae5-caa7-4c3f-8f8c-fe3eee311cf7</ProjectGuid>
+    <ProjectGuid>C2EE8AE5-CAA7-4C3F-8F8C-FE3EEE311CF7</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FSharp.GitHubApi.Tests</RootNamespace>
     <AssemblyName>FSharp.GitHubApi.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Name>FSharp.GitHubApi.Tests</Name>
+    <ProductVersion>12.0.0</ProductVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -55,9 +53,9 @@
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\FSharp.GitHubApi\FSharp.GitHubApi.fsproj">
       <Name>FSharp.GitHubApi</Name>
-      <Project>{4436b85d-e89b-42d5-980b-c8203981482d}</Project>
-      <Private>True</Private>
+      <Project>4436B85D-E89B-42D5-980B-C8203981482D</Project>
     </ProjectReference>
+    <Reference Include="FSharp.Core" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

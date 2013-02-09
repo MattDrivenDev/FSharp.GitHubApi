@@ -31,6 +31,15 @@ Originally intended to just be part of [OctocatTools](http://github.com/saxonmat
 
 ##Development##
 
+###Mono###
+
+* Requires `F# 3.0` for Mono (checkout [The F# Software Foundation](http://fsharp.org) for details).
+
+1. Run the `monobuild.sh` before development (fetches Nuget packages before starting a build).
+2. Edit the `TestSettings.fs` to include some valid GitHub credentials **NOTE: Don't commit this file and/or `push` back to GitHub**
+
+###Windows/.NET###
+
 1. Run the `ResolveDependencies.bat` before development.
 2. Edit the `TestSettings.fs` to include some valid GitHub credentials **NOTE: Do not ever commit this file and push back to GitHub**
 3. Run the `build.bat` file to build/test the code base.
