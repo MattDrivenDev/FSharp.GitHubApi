@@ -16,3 +16,5 @@ build-output/
 *.userprefs
 *.bat.save
 build.log.xml
+*.Results.xml
+*.log.xml

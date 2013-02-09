@@ -1,15 +1,14 @@
-#I @"packages\FAKE\tools\"
+#I @"packages/FAKE/tools/"
 #r "FakeLib.dll"
+
 open Fake
-
-
 
 // ------------------------ //
 // Configuration            //
 // ------------------------ //
-let output      = @"build-output\" 
-let api         = output + @"api\"
-let apitests    = output + @"api-tests\"
+let output      = @"./build-output/" 
+let api         = output + "api/"
+let apitests    = output + "api-tests/"
 let all         = [api;apitests;]
 let buildArgs   = ["PlatformTarget","x86"]
 
@@ -21,12 +20,12 @@ Target "Clean" (fun _ ->
 )
 
 Target "Build Api" (fun _ ->
-    let projects = !! @"src\FSharp.GitHubApi\FSharp.GitHubApi.fsproj"
+    let projects = !! @"src/FSharp.GitHubApi/FSharp.GitHubApi.fsproj"
     MSBuild api "Build" buildArgs projects |> Log "Build Api Log: "
 )
 
 Target "Build Api Tests" (fun _ ->
-    let projects = !! @"src\FSharp.GitHubApi.Tests\FSharp.GitHubApi.Tests.fsproj"
+    let projects = !! @"src/FSharp.GitHubApi.Tests/FSharp.GitHubApi.Tests.fsproj"
     MSBuild apitests "Build" buildArgs projects |> Log "Build Api Tests Log: "
 )
 
@@ -35,9 +34,9 @@ Target "Run FirstPass Tests" (fun _ ->
     NUnit (fun p ->
             { p with
                 IncludeCategory = "FirstPass"
-                ToolPath = @"packages\NUnit.Runners\tools"
+                ToolPath = "./packages/NUnit.Runners/tools"
                 ToolName = "nunit-console-x86.exe"
-                WorkingDir = apitests
+                //WorkingDir = apitests
                 DisableShadowCopy = true
                 OutputFile = "FirstPass.Results.xml"
                 TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "FSharp.GitHubApi.Tests.dll"))
@@ -48,9 +47,9 @@ Target "Run SecondPass Tests" (fun _ ->
     NUnit (fun p ->
             { p with
                 IncludeCategory = "SecondPass"
-                ToolPath = @"packages\NUnit.Runners\tools"
+                ToolPath = "./packages/NUnit.Runners/tools"
                 ToolName = "nunit-console-x86.exe"
-                WorkingDir = apitests
+                //WorkingDir = apitests
                 DisableShadowCopy = true
                 OutputFile = "SecondPass.Results.xml"
                 TimeOut = System.TimeSpan.MaxValue }) (!! (apitests + "FSharp.GitHubApi.Tests.dll"))
